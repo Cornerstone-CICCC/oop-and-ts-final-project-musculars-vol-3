@@ -1,7 +1,78 @@
 ---
 import Card from './Card.astro';
+
+const dummyData =[{
+  id:1,
+  title: "Do homework",
+  desc: "Math homework"
+},
+{
+  id:2,
+  title: "gym",
+  desc: "go to gym"
+}
+
+]
 ---
+<section class="todo-list-section">
+  <div class="card-container">
+    <h2>Todo</h2>
+    <!-- TODO: map card when backend is ready -->
+    {
+      dummyData.map((todo) => (
+        <Card 
+        id={todo.id}
+          title={todo.title}
+          desc={todo.desc}
+        />
+      ))
+    }
+  </div>
+  <div class="card-container">
+    <h2>In Progress</h2>
+        <!-- TODO: map card when backend is ready -->
+        {
+          dummyData.map((todo) => (
+            <Card 
+            id={todo.id}
+              title={todo.title}
+              desc={todo.desc}
+            />
+          ))
+        }
+  </div>
+  <div class="card-container">
+    <h2>Done</h2>
+        <!-- TODO: map card when backend is ready -->
+        {
+          dummyData.map((todo) => (
+            <Card 
+            id={todo.id}
+              title={todo.title}
+              desc={todo.desc}
+            />
+          ))
+        }
+  </div>
+</section>
 
-<Card />
 
-<style></style>
+
+<style>
+  .todo-list-section{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 20px;
+    margin-right:20px;
+    min-height: 300px;
+  }
+  .card-container{
+    flex:1;
+    background-color: #F5F5F5;
+    margin:10px;
+    padding-left:30px;
+    padding-right:30px;
+    border-radius: 10px;
+  }
+</style>
