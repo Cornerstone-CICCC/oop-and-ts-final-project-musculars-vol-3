@@ -4,57 +4,87 @@ import Card from './Card.astro';
 const dummyData =[{
   id:1,
   title: "Do homework",
-  desc: "Math homework"
+  desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamc",
+  status: "done"
 },
 {
   id:2,
   title: "gym",
-  desc: "go to gym"
+  desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamc",
+  status: "In progress"
+},
+{
+  id:3,
+  title: "Project",
+  desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamc",
+  status: "done"
+},
+{
+  id:4,
+  title: "Work",
+  desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamc",
+  status: "Todo"
 }
 
 ]
 ---
 <section class="todo-list-section">
   <div class="card-container">
-    <h2>Todo</h2>
-    <!-- TODO: map card when backend is ready -->
+    <div class="card-list-header">
+      <h2>Todo</h2>
+      <p>+</p>
+    </div>
     {
-      dummyData.map((todo) => (
-        <Card 
-        id={todo.id}
-          title={todo.title}
-          desc={todo.desc}
-        />
-      ))
+      dummyData
+        .filter((todo) => todo.status === "Todo")
+        .map((todo) => (
+          <Card 
+            id={todo.id}
+            title={todo.title}
+            desc={todo.desc}
+            status={todo.status}
+          />
+        ))
     }
   </div>
   <div class="card-container">
-    <h2>In Progress</h2>
-        <!-- TODO: map card when backend is ready -->
-        {
-          dummyData.map((todo) => (
-            <Card 
+    <div class="card-list-header">
+      <h2>In progress</h2>
+      <p>+</p>
+    </div>
+    {
+      dummyData
+        .filter((todo) => todo.status === "In progress")
+        .map((todo) => (
+          <Card 
             id={todo.id}
-              title={todo.title}
-              desc={todo.desc}
-            />
-          ))
-        }
+            title={todo.title}
+            desc={todo.desc}
+            status={todo.status}
+          />
+        ))
+    }
   </div>
   <div class="card-container">
-    <h2>Done</h2>
-        <!-- TODO: map card when backend is ready -->
-        {
-          dummyData.map((todo) => (
-            <Card 
+    <div class="card-list-header">
+      <h2>Done</h2>
+      <p>+</p>
+    </div>
+    {
+      dummyData
+        .filter((todo) => todo.status === "done")
+        .map((todo) => (
+          <Card 
             id={todo.id}
-              title={todo.title}
-              desc={todo.desc}
-            />
-          ))
-        }
+            title={todo.title}
+            desc={todo.desc}
+            status={todo.status}
+          />
+        ))
+    }
   </div>
 </section>
+
 
 
 
@@ -62,10 +92,18 @@ const dummyData =[{
   .todo-list-section{
     display: flex;
     justify-content: center;
-    align-items: center;
     margin-left: 20px;
     margin-right:20px;
     min-height: 300px;
+  }
+  .card-list-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .todo-list-section p{
+    font-size: 30px;
   }
   .card-container{
     flex:1;
