@@ -3,13 +3,17 @@ interface Props {
   id: number;
   title: string;
   desc: string;
+  status: string;
 }
 
-const { id, title, desc } = Astro.props;
+const { id, title, desc, status } = Astro.props;
 ---
 
 <div class="card">
-  <h3 class="card-title">{title}</h3>
+  <div class="card-header">
+    <h3 class="card-title">{title}</h3>
+    <img src="./ellipsis.png" alt="ellipsis">
+  </div>
   <p class="card-desc">{desc}</p>
 </div>
 
@@ -17,15 +21,25 @@ const { id, title, desc } = Astro.props;
   .card {
     background-color: #ffffff;
     border-radius: 10px;
-    padding: 20px;
+    padding:10px 20px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     margin: 10px 0;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
 
   .card:hover {
-    transform: translateY(-5px); /* ホバー時に少し浮き上がる */
+    transform: translateY(-5px);
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1); 
+  }
+
+  .card-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .card-header img{
+    width:15px;
+    height:15px;
   }
 
   .card-title {
