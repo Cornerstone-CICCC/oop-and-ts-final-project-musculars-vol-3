@@ -40,7 +40,7 @@ class Task {
     event.preventDefault();
     console.log("きたよ");
     const taskId = event.dataTransfer?.getData("taskId");
-    console.log(taskId);
+
     if (taskId) {
       const task = this.tasks.find((task) => task.id === parseInt(taskId));
       if (task) {
@@ -55,7 +55,13 @@ class Task {
   }
 
   renderTasks(): void {
-    const todoList = document.getElementById("todo-list") as HTMLUListElement;
+    const overlay = document.querySelector(".overlay") as HTMLElement;
+    if (overlay) {
+      overlay.classList.remove("overlay");
+      overlay.innerHTML = "";
+    }
+
+    const todoList = document.getElementById("list-todo") as HTMLUListElement;
     const inProgressList = document.getElementById(
       "list-inprogress"
     ) as HTMLUListElement;
@@ -83,9 +89,36 @@ class Task {
       newTask.innerHTML = `
       <div class="card-header">
         <h3 class="card-title">${item.title}</h3>
-        <img src="./ellipsis.png" alt="ellipsis">
+        <img class="option" src="./ellipsis.png" alt="ellipsis">
       </div>
       <p class="card-desc">${item.description}</p>`;
+
+      const option = newTask.querySelector(".option");
+      if (option) {
+        option.addEventListener("click", (event) => {
+          const overlay = document.createElement("div");
+          overlay.classList.add("overlay");
+          overlay.innerHTML = `
+          <div class="deleteConfirmation"> 
+            <p>Are you sure you want to delete this item?</p>
+            <p>This action cannot be undone </p>
+            <button class="delete">Delete Item</button>
+            <button class="cancel">Cancel</button>
+          </div>`;
+          document.body.append(overlay);
+
+          document.querySelector(".delete")?.addEventListener("click", () => {
+            let parent = event.target.parentNode.parentNode.id // todo : find a better way
+              .toString()
+              .substring(5);
+            this.deleteTask(parseInt(parent));
+          });
+
+          document.querySelector(".cancel")?.addEventListener("click", () => {
+            this.renderTasks();
+          });
+        });
+      }
 
       if (item.status === "Todo") {
         todoList.appendChild(newTask);
