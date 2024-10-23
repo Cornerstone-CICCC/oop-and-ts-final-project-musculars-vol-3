@@ -16,9 +16,8 @@ class Task {
   // add method
   addTask(newTask: TaskList) {
     newTask.id = Task.taskId++;
-
-    // TODO : add conditions for states
-    this.tasks.push(newTask);
+    this.tasks = [...this.tasks, newTask];
+    this.renderTasks();
   }
 
   // update method

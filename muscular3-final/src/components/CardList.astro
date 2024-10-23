@@ -5,56 +5,25 @@ import Card from './Card.astro';
   <div class="card-container">
     <div class="card-list-header">
       <h2>Todo</h2>
-      <p>+</p>
+      <p class="AddTodo">+</p>
     </div>
-    {
-      dummyData
-        .filter((todo) => todo.status === "Todo")
-        .map((todo) => (
-          <Card 
-            id={todo.id}
-            title={todo.title}
-            desc={todo.desc}
-            status={todo.status}
-          />
-        ))
-    }
+     <div id="todo-list"></div> 
+     <div>
+  </div>
   </div>
   <div class="card-container">
     <div class="card-list-header">
       <h2>In progress</h2>
-      <p>+</p>
+         <p class="AddInProgress">+</p>
     </div>
-    {
-      dummyData
-        .filter((todo) => todo.status === "In progress")
-        .map((todo) => (
-          <Card 
-            id={todo.id}
-            title={todo.title}
-            desc={todo.desc}
-            status={todo.status}
-          />
-        ))
-    }
+   <div id="list-inprogress"></div> 
   </div>
   <div class="card-container">
     <div class="card-list-header">
       <h2>Done</h2>
-      <p>+</p>
+        <p class="AddDone">+</p>
     </div>
-    {
-      dummyData
-        .filter((todo) => todo.status === "done")
-        .map((todo) => (
-          <Card 
-            id={todo.id}
-            title={todo.title}
-            desc={todo.desc}
-            status={todo.status}
-          />
-        ))
-    }
+    <div id="list-done"></div>
   </div>
 </section>
 
@@ -87,3 +56,24 @@ import Card from './Card.astro';
     border-radius: 10px;
   }
 </style>
+
+<script>
+import { taskList } from '../index.ts'
+
+taskList.renderTasks();
+
+function handleAddClick(status:string) {
+  const newTask ={
+    id:0,
+    title:"test",
+    description:"test",
+    status:status
+  }
+
+  taskList.addTask(newTask)
+}
+
+document.querySelector(".AddTodo")?.addEventListener('click', () => handleAddClick("Todo"));
+document.querySelector(".AddInProgress")?.addEventListener('click', () => handleAddClick("Inprogress"));
+document.querySelector(".AddDone")?.addEventListener('click', () => handleAddClick("Done"));
+</script>
