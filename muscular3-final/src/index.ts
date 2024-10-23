@@ -15,7 +15,6 @@ class Task {
 
   // add method
   addTask(newTask: TaskList) {
-    newTask.id = Task.taskId++;
     this.tasks = [...this.tasks, newTask];
     this.renderTasks();
   }
@@ -28,6 +27,29 @@ class Task {
   // delete method
   deleteTask(id: number) {
     this.tasks = this.tasks.filter((item) => item.id !== id);
+    this.renderTasks();
+  }
+
+  onDrag(event: DragEvent, taskId: number): void {
+    event.dataTransfer?.setData("taskId", taskId.toString());
+  }
+
+  onDrop(event: DragEvent, newCategory: string): void {
+    event.preventDefault();
+    console.log("きたよ");
+    const taskId = event.dataTransfer?.getData("taskId");
+    console.log(taskId);
+    if (taskId) {
+      const task = this.tasks.find((task) => task.id === parseInt(taskId));
+      if (task) {
+        task.status = newCategory;
+        this.renderTasks();
+      }
+    }
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
   }
 
   renderTasks(): void {
@@ -48,6 +70,14 @@ class Task {
     this.tasks.forEach((item) => {
       const newTask = document.createElement("div");
       newTask.classList.add("card");
+
+      newTask.id = `task-${item.id}`;
+      newTask.draggable = true;
+
+      newTask.addEventListener("dragstart", (event) =>
+        this.onDrag(event, item.id)
+      );
+
       newTask.innerHTML = `
       <div class="card-header">
         <h3 class="card-title">${item.title}</h3>

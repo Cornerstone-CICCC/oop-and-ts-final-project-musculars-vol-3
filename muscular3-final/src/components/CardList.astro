@@ -6,15 +6,16 @@ import Card from './Card.astro';
     <div class="card-list-header">
       <h2>Todo</h2>
       <p class="AddTodo">+</p>
+      <p class="DeleteTodo">-</p>
     </div>
-     <div id="todo-list"></div> 
+     <div id="list-todo"></div> 
      <div>
   </div>
   </div>
   <div class="card-container">
     <div class="card-list-header">
       <h2>In progress</h2>
-         <p class="AddInProgress">+</p>
+        <p class="AddInProgress">+</p>
     </div>
    <div id="list-inprogress"></div> 
   </div>
@@ -51,13 +52,32 @@ import { taskList } from '../index.ts'
 
 taskList.renderTasks();
 
+  const todoList = document.getElementById('list-todo');
+  const inProgressList = document.getElementById('list-inprogress');
+  const doneList = document.getElementById('list-done');
+
+  if (todoList) {
+    todoList.addEventListener('dragover', (event) => taskList.onDragOver(event));
+    todoList.addEventListener('drop', (event) => taskList.onDrop(event, 'Todo'));
+  }
+
+  if (inProgressList) {
+    inProgressList.addEventListener('dragover', (event) => taskList.onDragOver(event));
+    inProgressList.addEventListener('drop', (event) => taskList.onDrop(event, 'Inprogress'));
+  }
+
+  if (doneList) {
+    doneList.addEventListener('dragover', (event) => taskList.onDragOver(event));
+    doneList.addEventListener('drop', (event) => taskList.onDrop(event, 'Done'));
+  }
+
 function handleAddClick(status:string) {
   const newTask ={
-    id:0,
+    id: taskList.tasks.length + 1,
     title:"test",
-    description:"test",
+    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium totam voluptatibus illo eos qui accusamus velit facilis architecto ea quae recusandae blanditiis consequuntur, sed tenetur consequatur id sunt ullam voluptate?",
     status:status
-  }
+  }  
 
   taskList.addTask(newTask)
 }
@@ -65,4 +85,5 @@ function handleAddClick(status:string) {
 document.querySelector(".AddTodo")?.addEventListener('click', () => handleAddClick("Todo"));
 document.querySelector(".AddInProgress")?.addEventListener('click', () => handleAddClick("Inprogress"));
 document.querySelector(".AddDone")?.addEventListener('click', () => handleAddClick("Done"));
+document.querySelector(".DeleteTodo")?.addEventListener('click', () => handleAddClick("Done"));
 </script>
