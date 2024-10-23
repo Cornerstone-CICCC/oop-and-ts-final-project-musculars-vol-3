@@ -70,15 +70,18 @@ taskList.renderTasks();
     doneList.addEventListener('drop', (event) => taskList.onDrop(event, 'Done'));
   }
 
+
+let tmpNumber = 1;
 function handleAddClick(status:string) {
   const newTask ={
     id: taskList.tasks.length + 1,
-    title:"test",
-    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium totam voluptatibus illo eos qui accusamus velit facilis architecto ea quae recusandae blanditiis consequuntur, sed tenetur consequatur id sunt ullam voluptate?",
+    title:`title${tmpNumber}`,
+    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium totam voluptatibus illo eos qui ?",
     status:status
   }  
 
   taskList.addTask(newTask)
+  tmpNumber++
 }
 
 document.querySelector(".AddTodo")?.addEventListener('click', () => handleAddClick("Todo"));
