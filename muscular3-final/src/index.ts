@@ -26,7 +26,9 @@ class Task {
 
   // delete method
   deleteTask(id: number) {
-    this.tasks = this.tasks.filter((item) => item.id !== id);
+    this.tasks = this.tasks.filter((item) => {
+      return item.id !== id;
+    });
     this.renderTasks();
   }
 

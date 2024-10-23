@@ -6,7 +6,6 @@ import Card from './Card.astro';
     <div class="card-list-header">
       <h2>Todo</h2>
       <p class="AddTodo">+</p>
-      <p class="DeleteTodo">-</p>
     </div>
      <div id="list-todo"></div> 
      <div>
@@ -85,5 +84,4 @@ function handleAddClick(status:string) {
 document.querySelector(".AddTodo")?.addEventListener('click', () => handleAddClick("Todo"));
 document.querySelector(".AddInProgress")?.addEventListener('click', () => handleAddClick("Inprogress"));
 document.querySelector(".AddDone")?.addEventListener('click', () => handleAddClick("Done"));
-document.querySelector(".DeleteTodo")?.addEventListener('click', () => handleAddClick("Done"));
 </script>
