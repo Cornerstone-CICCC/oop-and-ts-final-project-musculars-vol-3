@@ -1,92 +1,31 @@
 ---
 import Card from './Card.astro';
-
-const dummyData =[{
-  id:1,
-  title: "Do homework",
-  desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamc",
-  status: "done"
-},
-{
-  id:2,
-  title: "gym",
-  desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamc",
-  status: "In progress"
-},
-{
-  id:3,
-  title: "Project",
-  desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamc",
-  status: "done"
-},
-{
-  id:4,
-  title: "Work",
-  desc: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamc",
-  status: "Todo"
-}
-
-]
 ---
 <section class="todo-list-section">
   <div class="card-container">
     <div class="card-list-header">
       <h2>Todo</h2>
-      <p>+</p>
+      <p class="AddTodo">+</p>
     </div>
-    {
-      dummyData
-        .filter((todo) => todo.status === "Todo")
-        .map((todo) => (
-          <Card 
-            id={todo.id}
-            title={todo.title}
-            desc={todo.desc}
-            status={todo.status}
-          />
-        ))
-    }
+     <div id="list-todo"></div> 
+     <div>
+  </div>
   </div>
   <div class="card-container">
     <div class="card-list-header">
       <h2>In progress</h2>
-      <p>+</p>
+        <p class="AddInProgress">+</p>
     </div>
-    {
-      dummyData
-        .filter((todo) => todo.status === "In progress")
-        .map((todo) => (
-          <Card 
-            id={todo.id}
-            title={todo.title}
-            desc={todo.desc}
-            status={todo.status}
-          />
-        ))
-    }
+   <div id="list-inprogress"></div> 
   </div>
   <div class="card-container">
     <div class="card-list-header">
       <h2>Done</h2>
-      <p>+</p>
+        <p class="AddDone">+</p>
     </div>
-    {
-      dummyData
-        .filter((todo) => todo.status === "done")
-        .map((todo) => (
-          <Card 
-            id={todo.id}
-            title={todo.title}
-            desc={todo.desc}
-            status={todo.status}
-          />
-        ))
-    }
+    <div id="list-done"></div>
   </div>
 </section>
-
-
-
 
 <style>
   .todo-list-section{
@@ -105,12 +44,47 @@ const dummyData =[{
   .todo-list-section p{
     font-size: 30px;
   }
-  .card-container{
-    flex:1;
-    background-color: #F5F5F5;
-    margin:10px;
-    padding-left:30px;
-    padding-right:30px;
-    border-radius: 10px;
-  }
 </style>
+
+<script>
+import { taskList } from '../index.ts'
+
+taskList.renderTasks();
+
+  const todoList = document.getElementById('list-todo');
+  const inProgressList = document.getElementById('list-inprogress');
+  const doneList = document.getElementById('list-done');
+
+  if (todoList) {
+    todoList.addEventListener('dragover', (event) => taskList.onDragOver(event));
+    todoList.addEventListener('drop', (event) => taskList.onDrop(event, 'Todo'));
+  }
+
+  if (inProgressList) {
+    inProgressList.addEventListener('dragover', (event) => taskList.onDragOver(event));
+    inProgressList.addEventListener('drop', (event) => taskList.onDrop(event, 'Inprogress'));
+  }
+
+  if (doneList) {
+    doneList.addEventListener('dragover', (event) => taskList.onDragOver(event));
+    doneList.addEventListener('drop', (event) => taskList.onDrop(event, 'Done'));
+  }
+
+
+let tmpNumber = 1;
+function handleAddClick(status:string) {
+  const newTask ={
+    id: taskList.tasks.length + 1,
+    title:`title${tmpNumber}`,
+    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium totam voluptatibus illo eos qui ?",
+    status:status
+  }  
+
+  taskList.addTask(newTask)
+  tmpNumber++
+}
+
+document.querySelector(".AddTodo")?.addEventListener('click', () => handleAddClick("Todo"));
+document.querySelector(".AddInProgress")?.addEventListener('click', () => handleAddClick("Inprogress"));
+document.querySelector(".AddDone")?.addEventListener('click', () => handleAddClick("Done"));
+</script>
