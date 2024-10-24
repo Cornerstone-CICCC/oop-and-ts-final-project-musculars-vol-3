@@ -4,8 +4,8 @@
       <h2>Todo</h2>
       <p class="AddTodo">+</p>
     </div>
-     <div id="list-todo"></div> 
-     <div>
+    <div id="list-todo"></div> 
+    <div>
   </div>
   </div>
   <div class="card-container">
@@ -13,7 +13,7 @@
       <h2>In progress</h2>
         <p class="AddInProgress">+</p>
     </div>
-   <div id="list-inprogress"></div> 
+  <div id="list-inprogress"></div> 
   </div>
   <div class="card-container">
     <div class="card-list-header">
@@ -24,7 +24,44 @@
   </div>
 </section>
 
+
+<!-- modal layout-->
+<div class="modal" id="addTaskModal">
+  <div class="modal-content">
+    <h2>Add New Task</h2>
+    <form id="addTaskForm">
+      <div class="form-group">
+        <div class="left">
+            <label for="taskTitle">Title:</label>
+            <input type="text" id="taskTitle" required>
+            <label for="taskDescription">Description:</label>
+            <textarea id="taskDescription" required></textarea>
+          <input type="hidden" id="taskStatus">
+          <div class="modal-buttons">
+            <button type="submit" class="submit-btn">Add Task</button>
+            <button type="button" class="cancel-btn">Cancel</button>
+          </div>
+        </div>
+
+        <div class="right">
+          <label for="">Assignees</label>
+          <div class="right-container">
+            <input type="checkbox" name="assignee" value="Eva"  id="taskTitle">Eva
+  
+            <input type="checkbox" name="assignee" value="Yuta">Yuta
+
+            <input type="checkbox" name="assignee" value="Risa">Risa
+          </div>
+        </div>
+      </div>  
+    </form>
+  </div>
+</div>
+
 <style>
+  .card-list-header p{
+    cursor: pointer;
+  }
   .todo-list-section{
     display: flex;
     justify-content: center;
@@ -41,6 +78,85 @@
   .todo-list-section p{
     font-size: 30px;
   }
+
+  /* modal */
+  .modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+  }
+
+  .modal-content {
+    position: relative;
+    background-color: white;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 80%;
+    max-width: 500px;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+
+  .left .right{
+    width:50%;
+  }
+
+  .form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    width: 100%;
+    padding: 8px;
+    /* border: 1px solid #ddd; */
+    border:none;
+    background-color: #EDEDED;
+    border-radius: 10px;
+  }
+
+  .form-group textarea {
+    height: 100px;
+    resize: vertical;
+  }
+
+  .modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+  }
+
+  .submit-btn,
+  .cancel-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .submit-btn {
+    background-color: #4CAF50;
+    color: white;
+  }
+
+  .cancel-btn {
+    background-color: #f44336;
+    color: white;
+  }
 </style>
 
 <script>
@@ -48,40 +164,73 @@ import { taskList } from '../index.ts'
 
 taskList.renderTasks();
 
-  const todoList = document.getElementById('list-todo');
-  const inProgressList = document.getElementById('list-inprogress');
-  const doneList = document.getElementById('list-done');
+const todoList = document.getElementById('list-todo');
+const inProgressList = document.getElementById('list-inprogress');
+const doneList = document.getElementById('list-done');
 
-  if (todoList) {
-    todoList.addEventListener('dragover', (event) => taskList.onDragOver(event));
-    todoList.addEventListener('drop', (event) => taskList.onDrop(event, 'Todo'));
-  }
-
-  if (inProgressList) {
-    inProgressList.addEventListener('dragover', (event) => taskList.onDragOver(event));
-    inProgressList.addEventListener('drop', (event) => taskList.onDrop(event, 'Inprogress'));
-  }
-
-  if (doneList) {
-    doneList.addEventListener('dragover', (event) => taskList.onDragOver(event));
-    doneList.addEventListener('drop', (event) => taskList.onDrop(event, 'Done'));
-  }
-
-
-let tmpNumber = 1;
-function handleAddClick(status:string) {
-  const newTask ={
-    id: 0,
-    title:`title${tmpNumber}`,
-    description:"Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laudantium totam voluptatibus illo eos qui ?",
-    status:status
-  }  
-
-  taskList.addTask(newTask)
-  tmpNumber++
+if (todoList) {
+  todoList.addEventListener('dragover', (event) => taskList.onDragOver(event));
+  todoList.addEventListener('drop', (event) => taskList.onDrop(event, 'Todo'));
 }
 
-document.querySelector(".AddTodo")?.addEventListener('click', () => handleAddClick("Todo"));
-document.querySelector(".AddInProgress")?.addEventListener('click', () => handleAddClick("Inprogress"));
-document.querySelector(".AddDone")?.addEventListener('click', () => handleAddClick("Done"));
+if (inProgressList) {
+  inProgressList.addEventListener('dragover', (event) => taskList.onDragOver(event));
+  inProgressList.addEventListener('drop', (event) => taskList.onDrop(event, 'Inprogress'));
+}
+
+if (doneList) {
+  doneList.addEventListener('dragover', (event) => taskList.onDragOver(event));
+  doneList.addEventListener('drop', (event) => taskList.onDrop(event, 'Done'));
+}
+
+
+// show modals :>
+const modal = document.getElementById('addTaskModal');
+const addTaskForm = document.getElementById('addTaskForm');
+const taskTitleInput = document.getElementById('taskTitle') as HTMLInputElement;
+const taskDescriptionInput = document.getElementById('taskDescription') as HTMLTextAreaElement;
+const taskStatusInput = document.getElementById('taskStatus') as HTMLInputElement;
+
+function openModal(status: string) {
+  if (modal) {
+    modal.style.display = 'block';
+    taskStatusInput.value = status;
+  }
+}
+
+function closeModal() {
+  if (modal) {
+    modal.style.display = 'none';
+    addTaskForm?.reset();
+  }
+}
+
+document.querySelector(".AddTodo")?.addEventListener('click', () => openModal("Todo"));
+document.querySelector(".AddInProgress")?.addEventListener('click', () => openModal("Inprogress"));
+document.querySelector(".AddDone")?.addEventListener('click', () => openModal("Done"));
+
+document.querySelector(".cancel-btn")?.addEventListener('click', closeModal);
+
+window.addEventListener('click', (event) => {
+  if (event.target === modal) {
+    closeModal();
+  }
+});
+
+addTaskForm?.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const assignees = Array.from(document.querySelectorAll('input[name="assignee"]:checked')).map(
+    (checkbox) => (checkbox as HTMLInputElement).value
+  )
+  const newTask = {
+    id: taskList.tasks.length + 1,
+    title: taskTitleInput.value,
+    description: taskDescriptionInput.value,
+    status: taskStatusInput.value,
+    assignees: assignees
+  };
+
+  taskList.addTask(newTask);
+  closeModal();
+});
 </script>

@@ -3,6 +3,7 @@ type TaskList = {
   title: string;
   description: string;
   status: string;
+  assignees: string[];
 };
 
 class Task {
@@ -59,6 +60,7 @@ class Task {
 
   onDrop(event: DragEvent, newCategory: string): void {
     event.preventDefault();
+    console.log(":)");
     const taskId = event.dataTransfer?.getData("taskId");
 
     if (taskId) {
@@ -112,7 +114,9 @@ class Task {
         <h3 class="card-title">${item.title}</h3>
         <img class="option" src="./ellipsis.png" alt="ellipsis">
       </div>
-      <p class="card-desc">${item.description}</p>`;
+      <p class="card-desc">${item.description}</p>
+      <p>${item.assignees}</p>
+      `;
 
       const option = newTask.querySelector(".option");
       if (option) {
@@ -128,14 +132,12 @@ class Task {
           </div>`;
           document.body.append(overlay);
 
-          document
-            .querySelector(".btn-delete")
-            ?.addEventListener("click", () => {
-              let parent = event.target.parentNode.parentNode.id // todo : find a better way
-                .toString()
-                .substring(5);
-              this.deleteTask(parseInt(parent));
-            });
+          document.querySelector(".delete")?.addEventListener("click", () => {
+            let parent = event.target?.parentNode.parentNode.id // todo : find a better way
+              .toString()
+              .substring(5);
+            this.deleteTask(parseInt(parent));
+          });
 
           document
             .querySelector(".btn-cancel")
