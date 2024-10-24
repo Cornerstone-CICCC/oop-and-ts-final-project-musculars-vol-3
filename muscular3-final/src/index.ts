@@ -7,6 +7,7 @@ type TaskList = {
 
 class Task {
   static taskId = 0;
+  static id = 0;
   tasks: TaskList[];
   filteredTask: TaskList[];
 
@@ -17,6 +18,7 @@ class Task {
 
   // add method
   addTask(newTask: TaskList) {
+    newTask.id = Task.id++;
     this.tasks = [...this.tasks, newTask];
     this.renderTasks();
   }
