@@ -1,6 +1,9 @@
 <header>
     <form action="">
         <input type="text" placeholder="Search...">
+        <div>
+            <img src="" alt="search button" class="test">
+        </div>
     </form>
     <div class="profile">
         <img src="yutaphoto.png" alt="Profile" class="profile-pic">
@@ -45,3 +48,30 @@
         object-fit: cover;
     }
 </style>
+
+<script>
+    import { taskList } from '../index.ts'
+    const form = document.querySelector("form")
+    const searchInput = document.querySelector("input")
+  
+
+    document.querySelector(".test")?.addEventListener("click",(e)=>{
+        taskList.filteredTask=[]
+        taskList.renderTasks()
+    })
+
+
+    form?.addEventListener("submit",(e)=>{
+        e.preventDefault()        
+        let targetInput = searchInput?.value
+        if(targetInput?.trim()){
+        taskList.tasks.forEach((item)=>{
+            if(item.title.includes(targetInput)){
+                taskList.addFilteredTask(item)
+            }
+        })
+    }
+      // rendering 
+      taskList.renderTasks()
+})       
+</script>

@@ -8,15 +8,21 @@ type TaskList = {
 class Task {
   static taskId = 0;
   tasks: TaskList[];
+  filteredTask: TaskList[];
 
   constructor() {
     this.tasks = [];
+    this.filteredTask = [];
   }
 
   // add method
   addTask(newTask: TaskList) {
     this.tasks = [...this.tasks, newTask];
     this.renderTasks();
+  }
+
+  addFilteredTask(newTask: TaskList) {
+    this.filteredTask = [...this.filteredTask, newTask];
   }
 
   // update method
@@ -29,6 +35,11 @@ class Task {
     this.tasks = this.tasks.filter((item) => {
       return item.id !== id;
     });
+
+    this.filteredTask = this.tasks.filter((item) => {
+      return item.id !== id;
+    });
+
     this.renderTasks();
   }
 
@@ -38,7 +49,6 @@ class Task {
 
   onDrop(event: DragEvent, newCategory: string): void {
     event.preventDefault();
-    console.log("きたよ");
     const taskId = event.dataTransfer?.getData("taskId");
 
     if (taskId) {
@@ -75,7 +85,8 @@ class Task {
     inProgressList.innerHTML = "";
     doneList.innerHTML = "";
 
-    this.tasks.forEach((item) => {
+    let test = this.filteredTask.length === 0 ? this.tasks : this.filteredTask;
+    test.forEach((item) => {
       const newTask = document.createElement("div");
       newTask.classList.add("card");
 
