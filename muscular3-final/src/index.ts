@@ -123,8 +123,8 @@ class Task {
           <div class="deleteConfirmation"> 
             <p>Are you sure you want to delete this item?</p>
             <p>This action cannot be undone </p>
-            <button class="delete">Delete Item</button>
-            <button class="cancel">Cancel</button>
+            <button class="btn-delete">Delete Item</button>
+            <button class="btn-cancel">Cancel</button>
           </div>`;
           document.body.append(overlay);
 
