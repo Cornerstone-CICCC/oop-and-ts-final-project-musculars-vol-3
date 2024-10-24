@@ -5,6 +5,7 @@ type TaskList = {
   title: string;
   description: string;
   status: string;
+  assignees: string[];
 };
 
 type TaskArray= TaskList[]
@@ -59,7 +60,7 @@ class Task {
 
   onDrop(event: DragEvent, newCategory: string): void {
     event.preventDefault();
-    console.log("きたよ");
+    console.log(":)");
     const taskId = event.dataTransfer?.getData("taskId");
 
     if (taskId) {
@@ -116,7 +117,9 @@ class Task {
           <img class="option" src="./delete.png" alt="delete icon">
         </div>
       </div>
-      <p class="card-desc">${item.description}</p>`;
+      <p class="card-desc">${item.description}</p>
+      <p>${item.assignees}</p>
+      `;
 
       const option = newTask.querySelector(".option");
       const edit  = newTask.querySelector(".edit");
