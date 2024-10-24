@@ -128,16 +128,20 @@ class Task {
           </div>`;
           document.body.append(overlay);
 
-          document.querySelector(".delete")?.addEventListener("click", () => {
-            let parent = event.target.parentNode.parentNode.id // todo : find a better way
-              .toString()
-              .substring(5);
-            this.deleteTask(parseInt(parent));
-          });
+          document
+            .querySelector(".btn-delete")
+            ?.addEventListener("click", () => {
+              let parent = event.target.parentNode.parentNode.id // todo : find a better way
+                .toString()
+                .substring(5);
+              this.deleteTask(parseInt(parent));
+            });
 
-          document.querySelector(".cancel")?.addEventListener("click", () => {
-            this.renderTasks();
-          });
+          document
+            .querySelector(".btn-cancel")
+            ?.addEventListener("click", () => {
+              this.renderTasks();
+            });
         });
       }
 
