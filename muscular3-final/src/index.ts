@@ -10,6 +10,7 @@ class Task {
   static id = 0;
   tasks: TaskList[];
   filteredTask: TaskList[];
+  isFiltered = false;
 
   constructor() {
     this.tasks = [];
@@ -25,6 +26,7 @@ class Task {
 
   addFilteredTask(newTask: TaskList) {
     this.filteredTask = [...this.filteredTask, newTask];
+    this.isFiltered = true;
   }
 
   // update method
@@ -38,10 +40,16 @@ class Task {
       return item.id !== id;
     });
 
-    this.filteredTask = this.tasks.filter((item) => {
+    this.filteredTask = this.filteredTask.filter((item) => {
       return item.id !== id;
     });
 
+    this.renderTasks();
+  }
+
+  resetFilter() {
+    this.filteredTask = [];
+    this.isFiltered = false;
     this.renderTasks();
   }
 
@@ -87,8 +95,8 @@ class Task {
     inProgressList.innerHTML = "";
     doneList.innerHTML = "";
 
-    let test = this.filteredTask.length === 0 ? this.tasks : this.filteredTask;
-    test.forEach((item) => {
+    let targetList = this.isFiltered ? this.filteredTask : this.tasks;
+    targetList.forEach((item) => {
       const newTask = document.createElement("div");
       newTask.classList.add("card");
 

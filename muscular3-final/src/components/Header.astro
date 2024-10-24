@@ -2,7 +2,7 @@
     <form action="">
         <input type="text" placeholder="Search...">
         <div>
-            <img src="" alt="search button" class="test">
+            <img src="" alt="search button" class="delete">
         </div>
     </form>
     <div class="profile">
@@ -53,13 +53,10 @@
     import { taskList } from '../index.ts'
     const form = document.querySelector("form")
     const searchInput = document.querySelector("input")
-  
 
-    document.querySelector(".test")?.addEventListener("click",(e)=>{
-        taskList.filteredTask=[]
-        taskList.renderTasks()
+    document.querySelector(".delete")?.addEventListener("click",(e)=>{
+        taskList.resetFilter()
     })
-
 
     form?.addEventListener("submit",(e)=>{
         e.preventDefault()        
@@ -71,7 +68,8 @@
             }
         })
     }
-      // rendering 
-      taskList.renderTasks()
+
+    // rendering 
+    taskList.renderTasks()
 })       
 </script>
