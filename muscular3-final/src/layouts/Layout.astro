@@ -40,7 +40,7 @@ const { title } = Astro.props;
   }
 
   .deleteConfirmation{
-	 background-color: #fff;
+	  background-color: #fff;
     border-radius: 10px;
     padding: 20px;
     width: 400px; 
@@ -48,6 +48,17 @@ const { title } = Astro.props;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
 
+  .edit-modal{
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px; 
+    max-width: 90%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  }
+  .edit-input-title, .edit-input-description{
+    display: none;
+  }
   .card-container {
     flex: 1;
     background-color: #F5F5F5;
