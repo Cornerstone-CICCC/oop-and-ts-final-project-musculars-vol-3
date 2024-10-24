@@ -35,7 +35,8 @@ class Task {
       id: data.id,
       title: data.title, 
       description: data.description,
-      status: data.status
+      status: data.status,
+      assignees: data.assignees
     }
 
     const filteredTasks = this.tasks.filter((item) => {
