@@ -8,7 +8,6 @@ type TaskList = {
   assignees: string[];
 };
 
-type TaskArray= TaskList[]
 
 class Task {
   static taskId = 0;
@@ -127,7 +126,7 @@ class Task {
 
       if(edit){
         edit.addEventListener("click", (e) => {
-          console.log(e.target)
+          // console.log(e.target)
           const eventTarget = e.target as HTMLImageElement
 
           const eventId = Number(eventTarget.getAttribute("todo-id"))
@@ -136,24 +135,29 @@ class Task {
           overlayEdit.classList.add("overlay")
           overlayEdit.innerHTML = `
             <div class="edit-modal">
-              <div class="info">
-                <h2>Title</h2>
-                <img class="pencil-btn-title" src="./edit.png" alt="pencil icon">
-                <p>${item.title}</p>
-                <input type="text" class="edit-input-title">
-                <h2>Description</h2>
-                <img class="pencil-btn-description" src="./edit.png" alt="pencil icon">
-                <p>${item.description}</p>
-                <input type="text" class="edit-input-description">
-              </div>
-              <div class="assignees">
-                <h2>Assignees</h2>
-                <ul>
-                  <li><input type="checkbox"> User 1</li>
-                  <li><input type="checkbox"> User 2</li>
-                  <li><input type="checkbox"> User 3</li>
-                  <li><input type="checkbox"> User 4</li>
-                </ul>
+              <div class="everything">
+                <div class="info">
+                  <div class="edit-title">
+                    <h2>Title</h2>
+                    <img class="pencil-btn-title" src="./edit.png" alt="pencil icon">
+                  </div>
+                  <p>${item.title}</p>
+                  <input type="text" class="edit-input-title">
+                  <div class="edit-description">
+                    <h2>Description</h2>
+                    <img class="pencil-btn-description" src="./edit.png" alt="pencil icon">
+                  </div>
+                  <p>${item.description}</p>
+                  <input type="text" class="edit-input-description">
+                </div>
+                <div class="assignees">
+                  <h2>Assignees</h2>
+                  <ul>
+                    <li><input class="assign" type="checkbox" name="assignee" value="Eva" id="taskTitle"><p>Eva</p></li>
+                    <li><input class="assign" type="checkbox" name="assignee" value="Yuta" id="taskTitle"><p>Yuta</p></li>
+                    <li><input class="assign" type="checkbox" name="assignee" value="Risa" id="taskTitle"><p>Risa</p></li>
+                  </ul>
+                </div>
               </div>
               <button class="save-btn">Save Changes</button>
               <img class="close-btn" src="./close.png" alt="close icon">
@@ -186,6 +190,18 @@ class Task {
             }
           })
           
+          // check input on edit modal if its already on the assignees array 
+          const inputs = document.querySelectorAll(".assign")
+          // console.log(item.assignees)
+          inputs.forEach(input => {
+            // console.log((<HTMLInputElement>input).value)
+            item.assignees.forEach((assignee) => {
+              if((<HTMLInputElement>input).value === assignee){
+                (<HTMLInputElement>input).checked = true;
+              }
+            })
+          })
+
 
           document.querySelector(".save-btn")?.addEventListener("click", () => {
             const inputDescription = document.querySelector<HTMLElement>(".edit-input-description")
@@ -195,28 +211,45 @@ class Task {
             const valueTitle = (<HTMLInputElement> document.querySelector(".edit-input-title")).value;
             const valueDescription = (<HTMLInputElement> document.querySelector(".edit-input-description")).value;
 
-          
+            //create new array of edited elements 
+            const newAssignees = Array.from(document.querySelectorAll('input[name="assignee"]:checked')).map(
+              (checkbox) => (checkbox as HTMLInputElement).value
+            )
+            console.log(newAssignees)
             
             this.updateTask(eventId, {
               id: eventId,
               title: valueTitle,
               description: valueDescription,
-              status: item.status
+              status: item.status,
+              assignees: newAssignees
+
             })
 
-            if(!valueDescription){
+            if(!valueDescription && valueTitle){
               this.updateTask(eventId, {
                 id: eventId,
                 title: valueTitle,
                 description: item.description,
-                status: item.status
+                status: item.status,
+                assignees: newAssignees
               })
-            } else if(!valueTitle){
+
+            } else if(!valueTitle && valueDescription){
               this.updateTask(eventId, {
                 id: eventId,
                 title: item.title,
                 description: valueDescription,
-                status: item.status
+                status: item.status, 
+                assignees: newAssignees
+              })
+            } else if(!valueTitle && !valueDescription){
+              this.updateTask(eventId, {
+                id: eventId,
+                title: item.title,
+                description: item.description,
+                status: item.status, 
+                assignees: newAssignees
               })
             }
             
