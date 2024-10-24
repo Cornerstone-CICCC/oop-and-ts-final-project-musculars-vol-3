@@ -1,10 +1,13 @@
+import { validateEnvVariable } from "astro/env/runtime";
+
 type TaskList = {
-  id: number;
+  id: number | undefined;
   title: string;
   description: string;
   status: string;
   assignees: string[];
 };
+
 
 class Task {
   static taskId = 0;
@@ -31,8 +34,26 @@ class Task {
   }
 
   // update method
-  updateTask() {
-    return;
+  updateTask(id: number | undefined, data: TaskList): void {
+    const findTask = this.tasks.find((item) => {
+      return item.id === id;
+    });
+    console.log(findTask)
+    const updatedTask: TaskList= {
+      ...findTask,
+      id: data.id,
+      title: data.title, 
+      description: data.description,
+      status: data.status,
+      assignees: data.assignees
+    }
+
+    const filteredTasks = this.tasks.filter((item) => {
+      return item.id !== item.id
+    })
+
+    this.tasks = [...filteredTasks, updatedTask]
+    this.renderTasks();
   }
 
   // delete method
@@ -103,22 +124,175 @@ class Task {
       newTask.classList.add("card");
 
       newTask.id = `task-${item.id}`;
+      newTask.setAttribute("todo-id", `${item.id}`)
       newTask.draggable = true;
 
       newTask.addEventListener("dragstart", (event) =>
-        this.onDrag(event, item.id)
+        this.onDrag(event, item.id as number)
       );
 
       newTask.innerHTML = `
       <div class="card-header">
         <h3 class="card-title">${item.title}</h3>
-        <img class="option" src="./ellipsis.png" alt="ellipsis">
+        <div>
+          <img class="edit" src="./edit.png" alt="edit icon" todo-id="${item.id}">
+          <img class="option" src="./delete.png" alt="delete icon">
+        </div>
       </div>
       <p class="card-desc">${item.description}</p>
       <p>${item.assignees}</p>
       `;
 
       const option = newTask.querySelector(".option");
+      const edit  = newTask.querySelector(".edit");
+
+      if(edit){
+        edit.addEventListener("click", (e) => {
+          // console.log(e.target)
+          const eventTarget = e.target as HTMLImageElement
+
+          const eventId = Number(eventTarget.getAttribute("todo-id"))
+
+          const overlayEdit = document.createElement("div")
+          overlayEdit.classList.add("overlay")
+          overlayEdit.innerHTML = `
+            <div class="edit-modal">
+              <div class="everything">
+                <div class="info">
+                  <div class="edit-title">
+                    <h2>Title</h2>
+                    <img class="pencil-btn-title" src="./edit.png" alt="pencil icon">
+                  </div>
+                  <p>${item.title}</p>
+                  <input type="text" class="edit-input-title">
+                  <div class="edit-description">
+                    <h2>Description</h2>
+                    <img class="pencil-btn-description" src="./edit.png" alt="pencil icon">
+                  </div>
+                  <p>${item.description}</p>
+                  <input type="text" class="edit-input-description">
+                </div>
+                <div class="assignees">
+                  <h2>Assignees</h2>
+                  <ul>
+                    <li><input class="assign" type="checkbox" name="assignee" value="Eva" id="taskTitle"><p>Eva</p></li>
+                    <li><input class="assign" type="checkbox" name="assignee" value="Yuta" id="taskTitle"><p>Yuta</p></li>
+                    <li><input class="assign" type="checkbox" name="assignee" value="Risa" id="taskTitle"><p>Risa</p></li>
+                  </ul>
+                </div>
+              </div>
+              <button class="save-btn">Save Changes</button>
+              <img class="close-btn" src="./close.png" alt="close icon">
+            </div> 
+          `
+          document.body.append(overlayEdit)
+
+          document.querySelector(".close-btn")?.addEventListener("click", () => {
+            this.renderTasks();
+          })
+          
+          document.querySelector(".pencil-btn-title")?.addEventListener("click", () => {
+            const inputTitle = document.querySelector<HTMLElement>(".edit-input-title")
+            const pencilTitle = document.querySelector<HTMLElement>(".pencil-btn-title");
+            if(inputTitle){
+              inputTitle.style.display = "block"
+            }
+            if(pencilTitle){
+              pencilTitle.style.display = "none"
+            }
+          })
+          document.querySelector(".pencil-btn-description")?.addEventListener("click", () => {
+            const inputDescription = document.querySelector<HTMLElement>(".edit-input-description")
+            const pencilDescription = document.querySelector<HTMLElement>(".pencil-btn-description");
+            if(inputDescription){
+              inputDescription.style.display = "block"
+            }
+            if(pencilDescription){
+              pencilDescription.style.display = "none"
+            }
+          })
+          
+          // check input on edit modal if its already on the assignees array 
+          const inputs = document.querySelectorAll(".assign")
+          // console.log(item.assignees)
+          inputs.forEach(input => {
+            // console.log((<HTMLInputElement>input).value)
+            item.assignees.forEach((assignee) => {
+              if((<HTMLInputElement>input).value === assignee){
+                (<HTMLInputElement>input).checked = true;
+              }
+            })
+          })
+
+
+          document.querySelector(".save-btn")?.addEventListener("click", () => {
+            const inputDescription = document.querySelector<HTMLElement>(".edit-input-description")
+            const inputTitle = document.querySelector<HTMLElement>(".edit-input-title")
+            const pencilDescription = document.querySelector<HTMLElement>(".pencil-btn-description");
+            const pencilTitle = document.querySelector<HTMLElement>(".pencil-btn-title")
+            const valueTitle = (<HTMLInputElement> document.querySelector(".edit-input-title")).value;
+            const valueDescription = (<HTMLInputElement> document.querySelector(".edit-input-description")).value;
+
+            //create new array of edited elements 
+            const newAssignees = Array.from(document.querySelectorAll('input[name="assignee"]:checked')).map(
+              (checkbox) => (checkbox as HTMLInputElement).value
+            )
+            console.log(newAssignees)
+            
+            this.updateTask(eventId, {
+              id: eventId,
+              title: valueTitle,
+              description: valueDescription,
+              status: item.status,
+              assignees: newAssignees
+
+            })
+
+            if(!valueDescription && valueTitle){
+              this.updateTask(eventId, {
+                id: eventId,
+                title: valueTitle,
+                description: item.description,
+                status: item.status,
+                assignees: newAssignees
+              })
+
+            } else if(!valueTitle && valueDescription){
+              this.updateTask(eventId, {
+                id: eventId,
+                title: item.title,
+                description: valueDescription,
+                status: item.status, 
+                assignees: newAssignees
+              })
+            } else if(!valueTitle && !valueDescription){
+              this.updateTask(eventId, {
+                id: eventId,
+                title: item.title,
+                description: item.description,
+                status: item.status, 
+                assignees: newAssignees
+              })
+            }
+            
+            if(inputDescription){
+              inputDescription.style.display = "none"
+            }
+            if(pencilDescription){
+              pencilDescription.style.display = "block"
+            }
+            if(inputTitle){
+              inputTitle.style.display = "none"
+            }
+            if(pencilTitle){
+              pencilTitle.style.display = "block"
+            }
+            
+          })
+
+        })
+      }
+
       if (option) {
         option.addEventListener("click", (event) => {
           const overlay = document.createElement("div");
@@ -133,7 +307,7 @@ class Task {
           document.body.append(overlay);
 
           document.querySelector(".delete")?.addEventListener("click", () => {
-            let parent = event.target?.parentNode.parentNode.id // todo : find a better way
+            let parent = event.target?.parentNode.parentNode.parentNode.id // todo : find a better way
               .toString()
               .substring(5);
             this.deleteTask(parseInt(parent));
