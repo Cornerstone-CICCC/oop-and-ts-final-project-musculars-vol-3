@@ -1,9 +1,12 @@
 <header>
     <form action="">
         <input type="text" placeholder="Search...">
-        <div class="btn-close">
+        <span class="btn-search show">
+            <img src="../../public/search.png" alt="seach">
+        </span>
+        <span class="btn-close">
             <img src="../../public/close.png" alt="search button" class="delete">
-        </div>
+        </span>
     </form>
     <div class="profile">
         <img src="yutaphoto.png" alt="Profile" class="profile-pic">
@@ -22,12 +25,12 @@
         display: flex;
         align-items: center;
         position: relative;
-        flex-grow: 1;
         margin-right: 20px;
+        width: 500px;
     }
 
     input[type="text"] {
-        width: 500px;
+        width: 100%;
         padding: 8px 16px; 
         font-size: 16px;
         border: 1px solid #ccc;
@@ -51,20 +54,25 @@
         object-fit: cover;
     }
 
-    .btn-close {
-        display: none;
+    .btn-search, 
+    .btn-close{
+        position: absolute;
+        content: "";
+        top: 0;
+        right: 0;
+        transform: translate(-50%,20%);
+        cursor: pointer;
         width: 24px;
         height: 24px;
-        margin-left: 5px;
-        cursor: pointer;
+        display: none;
+    }
+
+    img{
+        width: 100%;
     }
 
     .show {
         display: block;
-    }
-
-    .btn-close img {
-        width: 100%;
     }
 </style>
 
@@ -73,15 +81,25 @@
     const form = document.querySelector("form")
     const searchInput = document.querySelector("input")
     const closeButton = document.querySelector(".btn-close")
+    const searchButton = document.querySelector(".btn-search")
 
     document.querySelector(".delete")?.addEventListener("click",(e)=>{
         taskList.resetFilter()
         closeButton?.classList.remove("show")
+        searchButton?.classList.add("show")
         form?.reset()
     })
 
+    searchButton?.addEventListener("click",(e)=>{
+        filterTask()
+    })
+
     form?.addEventListener("submit",(e)=>{
-        e.preventDefault()        
+        e.preventDefault();
+        filterTask()
+    })
+
+    function filterTask(){   
         let targetInput = searchInput?.value
         if(targetInput?.trim()){
         taskList.tasks.forEach((item)=>{
@@ -91,9 +109,10 @@
         })
 
         closeButton?.classList.add("show")
+        searchButton?.classList.remove("show")
     }
 
     // rendering 
     taskList.renderTasks()
-})       
+}
 </script>
