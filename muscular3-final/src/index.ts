@@ -112,7 +112,7 @@ class Task {
       newTask.innerHTML = `
       <div class="card-header">
         <h3 class="card-title">${item.title}</h3>
-        <div>
+        <div class="icons">
           <img class="edit" src="./edit.png" alt="edit icon" todo-id="${item.id}">
           <img class="option" src="./delete.png" alt="delete icon">
         </div>
